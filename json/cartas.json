@@ -1,0 +1,16 @@
+{
+    "cartas": [
+        {
+            "nombre": "Pedro",
+            "apellidos": "Martinez"
+        },
+        {
+            "nombre": "Juan",
+            "apellidos": "Fernandez"
+        },
+        {
+            "nombre": "Pepe",
+            "apellidos": "Pepitez"
+        }
+    ]
+}

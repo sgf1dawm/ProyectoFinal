@@ -1,5 +1,40 @@
 //Creacion de cartas automaticas
 
+
+function añadir() {
+    //Creo un objeto json con un array de objetos dentro
+    añadir = {
+        "Usuarios": [
+
+        ]
+    };
+
+    //Subo el objeto json al localStorage en formato string
+    localStorage.setItem("Usuarios", JSON.stringify(añadir));
+
+    //Me descargo el string de localStorage y lo convierto a JSON
+    getObject = JSON.parse(localStorage.getItem("Usuarios"));
+
+    //Creo un segundo objeto para añadir
+    añadir2 = { "nombre": "Jorge", "apellido": "De la Guia" }
+
+    //Añado el segundo objeto al array del JSON
+    getObject.Usuarios.push(añadir2);
+    añadir = getObject;
+
+    //Vuelvo a subir el JSON modificado
+    localStorage.setItem("Usuarios", JSON.stringify(añadir));
+
+    //Me descargo el JSON modificado
+
+}
+function borrar() {
+
+    // localStorage.removeItem("Usuarios");
+    getObject = JSON.parse(localStorage.getItem("Usuarios"));
+
+    console.log(getObject);
+}
 function CrearCarta() {
 
     var contMain = document.getElementById("ContenedorCartas");
@@ -12,7 +47,9 @@ function CrearCarta() {
 
     var imagen = document.createElement("img");
     imagen.className = "card-img-top";
-    imagen.setAttribute("src", "./img/Black.webp");
+    imagen.setAttribute("src", ImagenSiguiente());
+    imagen.setAttribute("width", "70");
+    imagen.setAttribute("height", "300");
 
     var contCarta = document.createElement("div");
     contCarta.className = "card-body";
@@ -39,6 +76,11 @@ function CrearCarta() {
     inputVida.setAttribute("placeholder", "Introduzca Vida");
     inputVida.disabled = true;
 
+    var borrar = document.createElement("button");
+    borrar.innerText = "Borrar";
+    borrar.setAttribute("onclick", "BorrarCarta(this)");
+    borrar.setAttribute("class", "btnBorrar");
+
 
 
 
@@ -49,6 +91,7 @@ function CrearCarta() {
     contCarta.appendChild(Nombre);
     contCarta.appendChild(inputApellidos);
     contCarta.appendChild(inputVida);
+    contCarta.appendChild(borrar);
     contCartaMain.appendChild(imagen);
     contCartaMain.appendChild(contCarta);
     contMain.appendChild(contCartaMain);
@@ -56,11 +99,56 @@ function CrearCarta() {
 
 var Editar = false;
 
+var nImg = -10;
+function ImagenSiguiente() {
+
+    var src;
+    nImg++;
+    switch (nImg) {
+        case 0:
+            src = "./img/bob.jpg";
+            break;
+
+        case 1:
+            src = "./img/calamardo.jpg";
+            break;
+
+        case 2:
+            src = "./img/patrick.jpg";
+            break;
+
+        case 3:
+            src = "./img/gary.jpg";
+            break;
+
+        case 4:
+            src = "./img/justice.jpg";
+            break;
+
+        case 5:
+            src = "./img/bob_tonto.jpg";
+            break;
+
+        case 6:
+            src = "./img/Calamardo_Guapo.jpg";
+            nImg = -1;
+            break;
+
+    }
+
+    return src;
+
+}
 
 function ModoEditar(boton) {
 
     if (Editar == false) {
         debugger;
+        let crear = document.createElement("button");
+        crear.innerText = "Crear un carta";
+        crear.setAttribute("onclick", "CrearCarta()");
+        crear.setAttribute("id", "btncrear");
+        boton.parentNode.appendChild(crear);
         Resaltar("si");
         ResaltarPlus();
         Editar = true;
@@ -79,6 +167,8 @@ function ModoEditar(boton) {
         debugger;
         Resaltar("no");
         Editar = false
+        let botonCrear = document.getElementById("btncrear");
+        botonCrear.parentNode.removeChild(botonCrear);
         boton.innerText = "Empieza a editar";
         let botoncitos = document.getElementsByClassName("btnBorrar");
         for (i = botoncitos.length - 1; i >= 0; i--) {
