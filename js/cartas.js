@@ -201,14 +201,18 @@ function GuardarCartas() {
     debugger;
     let cartas = document.getElementsByClassName("card-body");
     var nombres = [];
+    var apellidos = [];
+    var vidas = [];
 
     for (i = 0; i < cartas.length; i++) {
         inputs = cartas[i].childNodes;
         test = inputs[0].childNodes;
-        test1 = test[0].value
-        nombres.push(test1);
+        nom = test[0].value
+        nombres.push(nom);
+        apellidos.push(inputs[1].value);
+        vidas.push(inputs[2].value);
     }
-    console.log(nombres);
+    console.log(nombres + apellidos + vidas);
 }
 
 function Resaltar(SioNo) {
