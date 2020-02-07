@@ -35,8 +35,8 @@ function borrar() {
 
     console.log(getObject);
 }
-function CrearCarta() {
-
+function CrearCarta(Nombrecito, Apelliditos, Vidita) {
+    debugger;
     var contMain = document.getElementById("ContenedorCartas");
 
     var contCartaMain = document.createElement("div");
@@ -59,7 +59,14 @@ function CrearCarta() {
     var inputNombre = document.createElement("input");
     inputNombre.setAttribute("type", "text");
     inputNombre.style = "border: none; margin-bottom: 5px;";
-    inputNombre.setAttribute("placeholder", "Introduzca Nombre");
+
+    if (Nombrecito != null) {
+        inputNombre.setAttribute("value", Nombrecito);
+    }
+    else {
+        inputNombre.setAttribute("placeholder", "Introduzca Nombre");
+    }
+
     inputNombre.disabled = true;
 
     Nombre.appendChild(inputNombre);
@@ -67,13 +74,25 @@ function CrearCarta() {
     var inputApellidos = document.createElement("input");
     inputApellidos.setAttribute("type", "text");
     inputApellidos.style = "border: none; margin-bottom: 5px;";
-    inputApellidos.setAttribute("placeholder", "Introduzca Apellidos");
+
+    if (Apelliditos != null) {
+        inputNombre.setAttribute("value", Apelliditos);
+    }
+    else {
+        inputApellidos.setAttribute("placeholder", "Introduzca Apellidos");
+    }
     inputApellidos.disabled = true;
 
     var inputVida = document.createElement("input");
     inputVida.setAttribute("type", "text");
     inputVida.style = "border: none; margin-bottom: 5px;";
-    inputVida.setAttribute("placeholder", "Introduzca Vida");
+
+    if (Vidita != null) {
+        inputNombre.setAttribute("value", Vidita);
+    }
+    else {
+        inputVida.setAttribute("placeholder", "Introduzca Vida");
+    }
     inputVida.disabled = true;
 
     var borrar = document.createElement("button");
@@ -99,7 +118,7 @@ function CrearCarta() {
 
 var Editar = false;
 
-var nImg = -10;
+var nImg = -1;
 function ImagenSiguiente() {
 
     var src;
@@ -143,7 +162,7 @@ function ImagenSiguiente() {
 function ModoEditar(boton) {
 
     if (Editar == false) {
-        debugger;
+
         let crear = document.createElement("button");
         crear.innerText = "Crear un carta";
         crear.setAttribute("onclick", "CrearCarta()");
@@ -164,7 +183,7 @@ function ModoEditar(boton) {
         }
     }
     else {
-        debugger;
+        GuardarCartas();
         Resaltar("no");
         Editar = false
         let botonCrear = document.getElementById("btncrear");
@@ -176,6 +195,20 @@ function ModoEditar(boton) {
         }
 
     }
+}
+
+function GuardarCartas() {
+    debugger;
+    let cartas = document.getElementsByClassName("card-body");
+    var nombres = [];
+
+    for (i = 0; i < cartas.length; i++) {
+        inputs = cartas[i].childNodes;
+        test = inputs[0].childNodes;
+        test1 = test[0].value
+        nombres.push(test1);
+    }
+    console.log(nombres);
 }
 
 function Resaltar(SioNo) {
