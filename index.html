@@ -10,19 +10,19 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
-<body>
+<body onload="carga()">
     <!-- onload="Bloquear('body')" -->
 
     <div class=" container my-5 text-center" style="border: 2px solid black">
         <h2>Buenas</h2>
-        <button onclick="añadir()">Añadir</button>
-        <button onclick="borrar()">Borrar</button>
+        <button onclick="comprobar()">Ver</button>
+        <button onclick="limpiar()">Limpia</button>
     </div>
 
 
     <div class="container">
         <!-- <button onclick="CrearCarta()">Crea una carta</button> -->
-        <button onclick="ModoEditar(this)">Empieza a editar</button>
+        <button onclick="ModoEditar(this)" id="btnEditar">Empieza a editar</button>
 
     </div>
     <div class="container d-flex flex-wrap" id="ContenedorCartas">

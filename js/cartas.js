@@ -1,46 +1,80 @@
 //Creacion de cartas automaticas
 
+function carga() {
+    debugger;
+    var getObject = JSON.parse(localStorage.getItem("Usuarios"));
 
-function añadir() {
-    //Creo un objeto json con un array de objetos dentro
-    añadir = {
-        "Usuarios": [
+    if (getObject == null) {
+        //Creo un objeto json con un array de objetos dentro
+        añadir = {
+            "Usuarios": [
 
-        ]
-    };
+            ]
+        };
 
-    //Subo el objeto json al localStorage en formato string
-    localStorage.setItem("Usuarios", JSON.stringify(añadir));
+        //Subo el objeto json al localStorage en formato string
+        localStorage.setItem("Usuarios", JSON.stringify(añadir));
+        return;
+    }
+    debugger;
+    for (i = 0; i < getObject.Usuarios.length; i++) {
+        let name = getObject.Usuarios[i].nombre;
+        let surname = getObject.Usuarios[i].apellido;
+        let life = getObject.Usuarios[i].vida;
+        CrearCarta(name, surname, life);
+    }
+}
+
+function modificarCartas(Nombre, Apellido, Vida, Tipo) {
 
     //Me descargo el string de localStorage y lo convierto a JSON
-    getObject = JSON.parse(localStorage.getItem("Usuarios"));
+    let getObject = JSON.parse(localStorage.getItem("Usuarios"));
+    let lista = getObject.Usuarios;
+    let repetido = false;
+    if (Tipo == "Añadir") {
+        //Creo un segundo objeto para añadir
+        nuevo = { "nombre": Nombre, "apellido": Apellido, "vida": Vida }
 
-    //Creo un segundo objeto para añadir
-    añadir2 = { "nombre": "Jorge", "apellido": "De la Guia" }
-
-    //Añado el segundo objeto al array del JSON
-    getObject.Usuarios.push(añadir2);
-    añadir = getObject;
+        //Añado el segundo objeto al array del JSON
+        for (i = 0; i < getObject.Usuarios.length; i++) {
+            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida) {
+                repetido = true;
+                return;
+            }
+        }
+        if (repetido == false) { getObject.Usuarios.push(nuevo) }
+    }
+    else {
+        for (i = 0; i < lista.length; i++) {
+            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida) {
+                lista.splice(i, 1);
+            }
+        }
+    }
 
     //Vuelvo a subir el JSON modificado
-    localStorage.setItem("Usuarios", JSON.stringify(añadir));
-
-    //Me descargo el JSON modificado
+    localStorage.setItem("Usuarios", JSON.stringify(getObject));
 
 }
-function borrar() {
+
+function comprobar() {
 
     // localStorage.removeItem("Usuarios");
     getObject = JSON.parse(localStorage.getItem("Usuarios"));
 
     console.log(getObject);
 }
+
+function limpiar() {
+    localStorage.removeItem("Usuarios");
+}
+
 function CrearCarta(Nombrecito, Apelliditos, Vidita) {
     debugger;
     var contMain = document.getElementById("ContenedorCartas");
 
     var contCartaMain = document.createElement("div");
-    contCartaMain.className = "card mx-3 mt-3";
+    contCartaMain.className = "card mx-3 mt-3"
     contCartaMain.style = "width: 18rem;";
     contCartaMain.setAttribute("onmouseover", "Desbloquear(this)");
     contCartaMain.setAttribute("onmouseout", "Bloquear(this)");
@@ -57,42 +91,23 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita) {
     var Nombre = document.createElement("h5");
 
     var inputNombre = document.createElement("input");
+    inputNombre.setAttribute("onkeydown", "return limitarLetras(event)")
     inputNombre.setAttribute("type", "text");
     inputNombre.style = "border: none; margin-bottom: 5px;";
-
-    if (Nombrecito != null) {
-        inputNombre.setAttribute("value", Nombrecito);
-    }
-    else {
-        inputNombre.setAttribute("placeholder", "Introduzca Nombre");
-    }
-
     inputNombre.disabled = true;
 
     Nombre.appendChild(inputNombre);
 
     var inputApellidos = document.createElement("input");
+    inputApellidos.setAttribute("onkeydown", "return limitarLetras(event)")
     inputApellidos.setAttribute("type", "text");
     inputApellidos.style = "border: none; margin-bottom: 5px;";
-
-    if (Apelliditos != null) {
-        inputNombre.setAttribute("value", Apelliditos);
-    }
-    else {
-        inputApellidos.setAttribute("placeholder", "Introduzca Apellidos");
-    }
     inputApellidos.disabled = true;
 
     var inputVida = document.createElement("input");
+    inputVida.setAttribute("onkeydown", "return limitarNumeros(event)")
     inputVida.setAttribute("type", "text");
     inputVida.style = "border: none; margin-bottom: 5px;";
-
-    if (Vidita != null) {
-        inputNombre.setAttribute("value", Vidita);
-    }
-    else {
-        inputVida.setAttribute("placeholder", "Introduzca Vida");
-    }
     inputVida.disabled = true;
 
     var borrar = document.createElement("button");
@@ -100,6 +115,25 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita) {
     borrar.setAttribute("onclick", "BorrarCarta(this)");
     borrar.setAttribute("class", "btnBorrar");
 
+    if (Vidita != null) {
+
+        inputVida.setAttribute("value", Vidita);
+        inputApellidos.setAttribute("value", Apelliditos);
+        inputNombre.setAttribute("value", Nombrecito);
+        contCarta.appendChild(Nombre);
+        contCarta.appendChild(inputApellidos);
+        contCarta.appendChild(inputVida);
+    }
+    else {
+        contCartaMain.className += "border border-danger";
+        inputVida.setAttribute("placeholder", "Introduzca Vida");
+        inputNombre.setAttribute("placeholder", "Introduzca Nombre");
+        inputApellidos.setAttribute("placeholder", "Introduzca Apellidos");
+        contCarta.appendChild(Nombre);
+        contCarta.appendChild(inputApellidos);
+        contCarta.appendChild(inputVida);
+        contCarta.appendChild(borrar);
+    }
 
 
 
@@ -107,10 +141,7 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita) {
     // texto.className = "card-text";
     // texto.appendChild(document.createTextNode("Texto de ejemplo"));
 
-    contCarta.appendChild(Nombre);
-    contCarta.appendChild(inputApellidos);
-    contCarta.appendChild(inputVida);
-    contCarta.appendChild(borrar);
+
     contCartaMain.appendChild(imagen);
     contCartaMain.appendChild(contCarta);
     contMain.appendChild(contCartaMain);
@@ -169,7 +200,6 @@ function ModoEditar(boton) {
         crear.setAttribute("id", "btncrear");
         boton.parentNode.appendChild(crear);
         Resaltar("si");
-        ResaltarPlus();
         Editar = true;
         boton.innerText = "Terminar de editar";
         var borrar = document.createElement("button");
@@ -183,7 +213,8 @@ function ModoEditar(boton) {
         }
     }
     else {
-        GuardarCartas();
+        ComprobarCampos();
+        GuardarCartas("Guardar");
         Resaltar("no");
         Editar = false
         let botonCrear = document.getElementById("btncrear");
@@ -197,22 +228,34 @@ function ModoEditar(boton) {
     }
 }
 
-function GuardarCartas() {
+function ComprobarCampos() {
+
+}
+
+function GuardarCartas(Tipo) {
     debugger;
     let cartas = document.getElementsByClassName("card-body");
-    var nombres = [];
-    var apellidos = [];
-    var vidas = [];
-
-    for (i = 0; i < cartas.length; i++) {
-        inputs = cartas[i].childNodes;
-        test = inputs[0].childNodes;
-        nom = test[0].value
-        nombres.push(nom);
-        apellidos.push(inputs[1].value);
-        vidas.push(inputs[2].value);
+    var nombre;
+    var apellido;
+    var vida;
+    if (Tipo == "Guardar") {
+        for (i = 0; i < cartas.length; i++) {
+            inputs = cartas[i].childNodes;
+            test = inputs[0].childNodes;
+            nom = test[0].value;
+            ape = inputs[1].value;
+            vida = inputs[2].value;
+            modificarCartas(nom, ape, vida, "Añadir");
+        }
     }
-    console.log(nombres + apellidos + vidas);
+    else {
+        inputs = Tipo.childNodes;
+        test = inputs[0].childNodes;
+        nom = test[0].value;
+        ape = inputs[1].value;
+        vida = inputs[2].value;
+        modificarCartas(nom, ape, vida, "Borrar");
+    }
 }
 
 function Resaltar(SioNo) {
@@ -238,11 +281,11 @@ function Resaltar(SioNo) {
 }
 
 //Intentar hacer funcionar esto
-function ResaltarPlus() {
-    let cartitas = document.getElementsByClassName("card-body");
-    let estilo = "transition: color 0.25s; &:: before, &:: after { // Set border to invisible, so we don't see a 4px border on a 0x0 element before the transition starts border: 2px solid transparent; width: 0; height: 0; } // This covers the top & right borders (expands right, then down) &:: before { top: 0; left: 0; } // And this the bottom & left borders (expands left, then up) &:: after { bottom: 0; right: 0; } &: hover { color: $cyan; } // Hover styles &: hover:: before, &: hover:: after { width: 100 %; height: 100 %; } &: hover:: before { border - top - color: $cyan; // Make borders visible border - right - color: $cyan; transition: width 0.25s ease - out, // Width expands first height 0.25s ease - out 0.25s; // And then height } &: hover:: after { border - bottom - color: $cyan; // Make borders visible border - left - color: $cyan; transition: border - color 0s ease - out 0.5s, // Wait for ::before to finish before showing border width 0.25s ease - out 0.5s, // And then exanding width height 0.25s ease - out 0.75s; // And finally height }"
+// function ResaltarPlus() {
+//     let cartitas = document.getElementsByClassName("card-body");
+//     let estilo = "transition: color 0.25s; &:: before, &:: after { // Set border to invisible, so we don't see a 4px border on a 0x0 element before the transition starts border: 2px solid transparent; width: 0; height: 0; } // This covers the top & right borders (expands right, then down) &:: before { top: 0; left: 0; } // And this the bottom & left borders (expands left, then up) &:: after { bottom: 0; right: 0; } &: hover { color: $cyan; } // Hover styles &: hover:: before, &: hover:: after { width: 100 %; height: 100 %; } &: hover:: before { border - top - color: $cyan; // Make borders visible border - right - color: $cyan; transition: width 0.25s ease - out, // Width expands first height 0.25s ease - out 0.25s; // And then height } &: hover:: after { border - bottom - color: $cyan; // Make borders visible border - left - color: $cyan; transition: border - color 0s ease - out 0.5s, // Wait for ::before to finish before showing border width 0.25s ease - out 0.5s, // And then exanding width height 0.25s ease - out 0.75s; // And finally height }"
 
-}
+// }
 
 function Desbloquear(carta) {
     if (Editar == true) {
@@ -283,5 +326,30 @@ function BorrarCarta(boton) {
     debugger;
     var padre = boton.parentNode;
     let carta = padre.parentNode;
-    carta.parentNode.removeChild(carta);
+    let contendor = carta.parentNode;
+    contendor.removeChild(carta);
+    GuardarCartas(padre);
+
+}
+
+function limitarLetras() {
+    let e = window.event || evento;
+    let tecla = e.keyCode;
+    if ((tecla >= 65 && tecla <= 90) || tecla == 8 || tecla == 32 || tecla == 37 || tecla == 39 || tecla == 46) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function limitarNumeros() {
+    let e = window.event || evento;
+    let tecla = e.keyCode;
+    if ((tecla >= 48 && tecla <= 57) || tecla == 8 || tecla == 37 || tecla == 39 || tecla == 46) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
