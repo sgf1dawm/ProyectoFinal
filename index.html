@@ -8,27 +8,31 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<body onload="carga()">
+<body onload="carga()" style="background-color: honeydew" class="circulo">
     <!-- onload="Bloquear('body')" -->
 
-    <div class=" container my-5 text-center" style="border: 2px solid black">
-        <h2>Buenas</h2>
+    <div class=" container my-5 text-center" style="border: 2px solid black; background-color: rgb(222, 255, 168)">
+        <h2>Bienvenido</h2>
         <button onclick="comprobar()">Ver</button>
         <button onclick="limpiar()">Limpia</button>
+        <button onclick="Formulario(1)">Form</button>
+        <button onclick="Formulario(2)">Form2</button>
     </div>
 
 
-    <div class="container">
+    <div class="container" style="background-color: white; border: 1px solid black">
         <!-- <button onclick="CrearCarta()">Crea una carta</button> -->
-        <button onclick="ModoEditar(this)" id="btnEditar">Empieza a editar</button>
+        <div>
+            <button onclick="ModoEditar(this)" id="btnEditar">Empieza a editar</button>
 
+        </div>
+
+        <div class="container d-flex flex-wrap" id="ContenedorCartas">
+        </div>
     </div>
-    <div class="container d-flex flex-wrap" id="ContenedorCartas">
-
-    </div>
-
 
     <div class="container"></div>
 

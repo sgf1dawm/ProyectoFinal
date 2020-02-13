@@ -1,0 +1,35 @@
+.circulo{
+    
+      animation: colorchange 60s;
+      -webkit-animation: colorchange 60s;
+}
+@keyframes colorchange
+    {
+      0%   {background: rgba(255, 0, 0, 0.10);}
+      25%  {background: rgba(255, 255, 0, 0.10); }
+      50%  {background: rgba(0, 0, 255, 0.10); }
+      75%  {background: rgba(0, 128, 0, 0.10); }
+      100% {background: rgba(255, 0, 0, 0.10); ;}
+    }
+
+    @-webkit-keyframes colorchange
+    {
+    0%   {background: rgba(255, 0, 0, 0.10);}
+      25%  {background: rgba(255, 255, 0, 0.10); }
+      50%  {background: rgba(0, 0, 255, 0.10); }
+      75%  {background: rgba(0, 128, 0, 0.10); }
+      100% {background: rgba(255, 0, 0, 0.10); }
+    }
+
+button{
+    border:none; 
+    background-color:rgba(255, 255, 255, 0);
+}
+
+input{
+    width: 14rem;
+}
+
+div input:first-child{
+    width: 16rem;
+}

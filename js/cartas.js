@@ -181,6 +181,10 @@ function ImagenSiguiente() {
 
         case 6:
             src = "./img/Calamardo_Guapo.jpg";
+            break;
+
+        case 7:
+            src = "./img/Arenita.jpg"
             nImg = -1;
             break;
 
@@ -213,22 +217,44 @@ function ModoEditar(boton) {
         }
     }
     else {
-        ComprobarCampos();
-        GuardarCartas("Guardar");
-        Resaltar("no");
-        Editar = false
-        let botonCrear = document.getElementById("btncrear");
-        botonCrear.parentNode.removeChild(botonCrear);
-        boton.innerText = "Empieza a editar";
-        let botoncitos = document.getElementsByClassName("btnBorrar");
-        for (i = botoncitos.length - 1; i >= 0; i--) {
-            botoncitos[i].parentNode.removeChild(botoncitos[i]);
+        debugger;
+        if (ComprobarCampos()) {
+            GuardarCartas("Guardar");
+            Resaltar("no");
+            Editar = false
+            let botonCrear = document.getElementById("btncrear");
+            botonCrear.parentNode.removeChild(botonCrear);
+            boton.innerText = "Empieza a editar";
+            let botoncitos = document.getElementsByClassName("btnBorrar");
+            for (i = botoncitos.length - 1; i >= 0; i--) {
+                botoncitos[i].parentNode.removeChild(botoncitos[i]);
+            }
         }
 
     }
 }
 
+function Formulario(n) {
+    if (n == 1) {
+        var contenedor = document.getElementById("ContenedorCartas");
+        contenedor.parentNode.removeChild(contenedor);
+        console.log(contenedor);
+    }
+    else {
+        contenedor.parentNode.appendChild(contenedor);
+    }
+}
+
 function ComprobarCampos() {
+    let si = true;
+    let TodosInputs = document.getElementsByTagName("input");
+    for (i = 0; i < TodosInputs.length; i++) {
+        if (TodosInputs[i].value == "") {
+            TodosInputs[i].placeholder = "QUE INTRODUZCAS ALGO";
+            si = false;
+        }
+    }
+    return si;
 
 }
 
@@ -280,12 +306,6 @@ function Resaltar(SioNo) {
     }
 }
 
-//Intentar hacer funcionar esto
-// function ResaltarPlus() {
-//     let cartitas = document.getElementsByClassName("card-body");
-//     let estilo = "transition: color 0.25s; &:: before, &:: after { // Set border to invisible, so we don't see a 4px border on a 0x0 element before the transition starts border: 2px solid transparent; width: 0; height: 0; } // This covers the top & right borders (expands right, then down) &:: before { top: 0; left: 0; } // And this the bottom & left borders (expands left, then up) &:: after { bottom: 0; right: 0; } &: hover { color: $cyan; } // Hover styles &: hover:: before, &: hover:: after { width: 100 %; height: 100 %; } &: hover:: before { border - top - color: $cyan; // Make borders visible border - right - color: $cyan; transition: width 0.25s ease - out, // Width expands first height 0.25s ease - out 0.25s; // And then height } &: hover:: after { border - bottom - color: $cyan; // Make borders visible border - left - color: $cyan; transition: border - color 0s ease - out 0.5s, // Wait for ::before to finish before showing border width 0.25s ease - out 0.5s, // And then exanding width height 0.25s ease - out 0.75s; // And finally height }"
-
-// }
 
 function Desbloquear(carta) {
     if (Editar == true) {

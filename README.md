@@ -1,18 +1,19 @@
 # ProyectoFinal
 Deberá incluir: (4 puntos)
-1. Eventos de ratón (2 además de onclick).
+<!-- 1. Eventos de ratón (2 además de onclick). -->
 
-2. Eventos de teclado para validaciones de campos (2 como mínimo).
+2. Eventos de teclado para validaciones de campos (2 como mínimo). 
+<!-- 1 hecho -->
 
 3. Expresiones regulares (3 como mínimo).
 
 4. Empleo de cookies.
 
-5. DOM: creación de varios elementos de forma dinámica en el documento
-utilizando las propiedades y métodos necesarios para ello.
+<!-- 5. DOM: creación de varios elementos de forma dinámica en el documento
+utilizando las propiedades y métodos necesarios para ello. -->
 
-6. Una carpeta denominada js que contenga las funciones JavaScript con los
-requerimientos que se piden en el proyecto.
+<!-- 6. Una carpeta denominada js que contenga las funciones JavaScript con los
+requerimientos que se piden en el proyecto. -->
 
 7. Memoria del proyecto en pdf que incluya la siguiente información:
  Título de la aplicación.
