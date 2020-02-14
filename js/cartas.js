@@ -234,14 +234,28 @@ function ModoEditar(boton) {
     }
 }
 
+
 function Formulario(n) {
     if (n == 1) {
-        var contenedor = document.getElementById("ContenedorCartas");
-        contenedor.parentNode.removeChild(contenedor);
-        console.log(contenedor);
+        debugger;
+        var contenedor = document.getElementById("ContenedorCartas").childNodes;
+        for (i = contenedor.length - 1; i >= 0; i--) {
+            let prueba = contenedor[i];
+            prueba.parentNode.removeChild(prueba);
+        }
+        return;
+    }
+    if (n == 0) {
+        Formulario(1);
+        form = document.createElement("form");
+        form.appendChild(inputNombre);
+        form.appendChild(inputApellidos);
+        form.appendChild(inputVida);
+        document.getElementById("ContenedorCartas").appendChild(form);
+
     }
     else {
-        contenedor.parentNode.appendChild(contenedor);
+        carga();
     }
 }
 
