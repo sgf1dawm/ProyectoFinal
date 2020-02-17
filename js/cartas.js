@@ -2,74 +2,77 @@
 
 function carga() {
     debugger;
-    var getObject = JSON.parse(localStorage.getItem("Usuarios"));
+    var getObject = JSON.parse(localStorage.getItem("Personajes"));
 
     if (getObject == null) {
         //Creo un objeto json con un array de objetos dentro
         añadir = {
-            "Usuarios": [
+            "Personajes": [
 
             ]
         };
 
         //Subo el objeto json al localStorage en formato string
-        localStorage.setItem("Usuarios", JSON.stringify(añadir));
+        localStorage.setItem("Personajes", JSON.stringify(añadir));
         return;
     }
-    debugger;
-    for (i = 0; i < getObject.Usuarios.length; i++) {
-        let name = getObject.Usuarios[i].nombre;
-        let surname = getObject.Usuarios[i].apellido;
-        let life = getObject.Usuarios[i].vida;
-        CrearCarta(name, surname, life);
+    for (i = 0; i < getObject.Personajes.length; i++) {
+        let name = getObject.Personajes[i].nombre;
+        let surname = getObject.Personajes[i].apellido;
+        let life = getObject.Personajes[i].vida;
+        let attack = getObject.Personajes[i].ataque;
+        CrearCarta(name, surname, life, attack);
+    }
+    if (getObject.Personajes.length < 1) {
+        btnPelea.disabled = true;
     }
 }
 
-function modificarCartas(Nombre, Apellido, Vida, Tipo) {
+function modificarCartas(Nombre, Apellido, Vida, Ataque, Tipo) {
 
     //Me descargo el string de localStorage y lo convierto a JSON
-    let getObject = JSON.parse(localStorage.getItem("Usuarios"));
-    let lista = getObject.Usuarios;
+    let getObject = JSON.parse(localStorage.getItem("Personajes"));
+    let lista = getObject.Personajes;
     let repetido = false;
     if (Tipo == "Añadir") {
         //Creo un segundo objeto para añadir
-        nuevo = { "nombre": Nombre, "apellido": Apellido, "vida": Vida }
+        nuevo = { "nombre": Nombre, "apellido": Apellido, "vida": Vida, "ataque": Ataque }
 
         //Añado el segundo objeto al array del JSON
-        for (i = 0; i < getObject.Usuarios.length; i++) {
-            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida) {
+        for (i = 0; i < getObject.Personajes.length; i++) {
+            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida && lista[i].ataque == Ataque) {
                 repetido = true;
                 return;
             }
         }
-        if (repetido == false) { getObject.Usuarios.push(nuevo) }
+        if (repetido == false) { getObject.Personajes.push(nuevo) }
     }
     else {
         for (i = 0; i < lista.length; i++) {
-            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida) {
+            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida && lista[i].ataque == Ataque) {
                 lista.splice(i, 1);
             }
         }
     }
 
     //Vuelvo a subir el JSON modificado
-    localStorage.setItem("Usuarios", JSON.stringify(getObject));
+    localStorage.setItem("Personajes", JSON.stringify(getObject));
 
 }
 
 function comprobar() {
 
-    // localStorage.removeItem("Usuarios");
-    getObject = JSON.parse(localStorage.getItem("Usuarios"));
+    // localStorage.removeItem("Personajes");
+    getObject = JSON.parse(localStorage.getItem("Personajes"));
 
     console.log(getObject);
 }
 
 function limpiar() {
-    localStorage.removeItem("Usuarios");
+    localStorage.removeItem("Personajes");
 }
 
-function CrearCarta(Nombrecito, Apelliditos, Vidita) {
+function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     debugger;
     var contMain = document.getElementById("ContenedorCartas");
 
@@ -110,6 +113,12 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita) {
     inputVida.style = "border: none; margin-bottom: 5px;";
     inputVida.disabled = true;
 
+    var inputAtaque = document.createElement("input");
+    inputAtaque.setAttribute("onkeydown", "return limitarNumeros(event)")
+    inputAtaque.setAttribute("type", "text");
+    inputAtaque.style = "border: none; margin-bottom: 5px;";
+    inputAtaque.disabled = true;
+
     var borrar = document.createElement("button");
     borrar.innerText = "Borrar";
     borrar.setAttribute("onclick", "BorrarCarta(this)");
@@ -117,30 +126,27 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita) {
 
     if (Vidita != null) {
 
+        inputAtaque.setAttribute("value", Ataquecito);
         inputVida.setAttribute("value", Vidita);
         inputApellidos.setAttribute("value", Apelliditos);
         inputNombre.setAttribute("value", Nombrecito);
         contCarta.appendChild(Nombre);
         contCarta.appendChild(inputApellidos);
         contCarta.appendChild(inputVida);
+        contCarta.appendChild(inputAtaque);
     }
     else {
         contCartaMain.className += "border border-danger";
+        inputAtaque.setAttribute("placeholder", "Introduce Ataque");
         inputVida.setAttribute("placeholder", "Introduzca Vida");
         inputNombre.setAttribute("placeholder", "Introduzca Nombre");
         inputApellidos.setAttribute("placeholder", "Introduzca Apellidos");
         contCarta.appendChild(Nombre);
         contCarta.appendChild(inputApellidos);
         contCarta.appendChild(inputVida);
+        contCarta.appendChild(inputAtaque);
         contCarta.appendChild(borrar);
     }
-
-
-
-    // var texto = document.createElement("p");
-    // texto.className = "card-text";
-    // texto.appendChild(document.createTextNode("Texto de ejemplo"));
-
 
     contCartaMain.appendChild(imagen);
     contCartaMain.appendChild(contCarta);
@@ -197,7 +203,7 @@ function ImagenSiguiente() {
 function ModoEditar(boton) {
 
     if (Editar == false) {
-
+        btnPelea
         let crear = document.createElement("button");
         crear.innerText = "Crear un carta";
         crear.setAttribute("onclick", "CrearCarta()");
@@ -232,32 +238,35 @@ function ModoEditar(boton) {
         }
 
     }
+
+    document.getElementById("ContenedorCartas").childNodes < 2 ? btnPelea.disabled = true : btnPelea.disabled = false;
 }
 
 
-function Formulario(n) {
-    if (n == 1) {
-        debugger;
-        var contenedor = document.getElementById("ContenedorCartas").childNodes;
-        for (i = contenedor.length - 1; i >= 0; i--) {
-            let prueba = contenedor[i];
-            prueba.parentNode.removeChild(prueba);
-        }
-        return;
-    }
-    if (n == 0) {
-        Formulario(1);
-        form = document.createElement("form");
-        form.appendChild(inputNombre);
-        form.appendChild(inputApellidos);
-        form.appendChild(inputVida);
-        document.getElementById("ContenedorCartas").appendChild(form);
+// function Formulario(n) {
+//     if (n == 1) {
+//         debugger;
+//         var contenedor = document.getElementById("ContenedorCartas").childNodes;
+//         for (i = contenedor.length - 1; i >= 0; i--) {
+//             let prueba = contenedor[i];
+//             prueba.parentNode.removeChild(prueba);
+//         }
+//         return;
+//     }
+//     if (n == 0) {
+//         Formulario(1);
+//         form = document.createElement("form");
+//         form.appendChild(inputNombre);
+//         form.appendChild(inputApellidos);
+//         form.appendChild(inputVida);
+//         form.appendChild(inputAtaque);
+//         document.getElementById("ContenedorCartas").appendChild(form);
 
-    }
-    else {
-        carga();
-    }
-}
+//     }
+//     else {
+//         carga();
+//     }
+// }
 
 function ComprobarCampos() {
     let si = true;
@@ -275,9 +284,10 @@ function ComprobarCampos() {
 function GuardarCartas(Tipo) {
     debugger;
     let cartas = document.getElementsByClassName("card-body");
-    var nombre;
-    var apellido;
+    var nom;
+    var ape;
     var vida;
+    var ataque;
     if (Tipo == "Guardar") {
         for (i = 0; i < cartas.length; i++) {
             inputs = cartas[i].childNodes;
@@ -285,7 +295,8 @@ function GuardarCartas(Tipo) {
             nom = test[0].value;
             ape = inputs[1].value;
             vida = inputs[2].value;
-            modificarCartas(nom, ape, vida, "Añadir");
+            ataque = inputs[3].value;
+            modificarCartas(nom, ape, vida, ataque, "Añadir");
         }
     }
     else {
@@ -294,7 +305,8 @@ function GuardarCartas(Tipo) {
         nom = test[0].value;
         ape = inputs[1].value;
         vida = inputs[2].value;
-        modificarCartas(nom, ape, vida, "Borrar");
+        ataque = inputs[3].value;
+        modificarCartas(nom, ape, vida, ataque, "Borrar");
     }
 }
 
@@ -386,4 +398,40 @@ function limitarNumeros() {
     else {
         return false;
     }
+}
+
+function Pelea(n) {
+    if (n != 0) {
+        debugger;
+        getObject = JSON.parse(localStorage.getItem("Personajes"));
+        var listaIndices = new Array();
+        var mayor = 0;
+
+        for (i = 0; i < getObject.Personajes.length; i++) {
+            let life = getObject.Personajes[i].vida;
+            let attack = getObject.Personajes[i].ataque;
+            let indice = life * (attack / 100);
+            listaIndices[i] = indice;
+            mayor = indice > mayor ? indice : mayor;
+        }
+        mayor = listaIndices.indexOf(mayor) + 1;
+        contendor = document.getElementById("ContenedorCartas").childNodes;
+        for (y = 1; y < contendor.length; y++) {
+            if (y != mayor)
+                contendor[y].className = "ocultar";
+        }
+        titulo = document.createElement("h2");
+        titulo.innerText = "Ganador";
+        titulo.style = "text-align: center;";
+        contendor[mayor].appendChild(titulo);
+        contendor[mayor].className = "ganador";
+        btnEditar.className = "ocultar";
+        btnPelea.className = "ocultar";
+        let volver = document.createElement("button");
+        volver.innerText = "Volver a la lista";
+        volver.setAttribute("onclick", "location.reload()");
+        volver.style = "float: right; border: 1px solid black";
+        contendor[mayor].appendChild(volver);
+    }
+
 }

@@ -20,14 +20,30 @@
       75%  {background: rgba(0, 128, 0, 0.10); }
       100% {background: rgba(255, 0, 0, 0.10); }
     }
+    #ContenedorCartas{
+      display: flex;
+    }
+.ganador{
+  margin: 2% 0 2% 0;
+  width: 35rem;
+  margin-left: 37%;
+}
 
+.ocultar{
+  display: none;
+}
+  
 button{
     border:none; 
     background-color:rgba(255, 255, 255, 0);
 }
 
-input{
-    width: 14rem;
+#pelea{
+  float: right;
+}
+
+input,h5 input{
+    width: 60%;
 }
 
 div input:first-child{

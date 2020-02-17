@@ -12,14 +12,13 @@
 </head>
 
 <body onload="carga()" style="background-color: honeydew" class="circulo">
-    <!-- onload="Bloquear('body')" -->
 
     <div class=" container my-5 text-center" style="border: 2px solid black; background-color: rgb(222, 255, 168)">
         <h2>Bienvenido</h2>
-        <button onclick="comprobar()">Ver</button>
+        <!-- <button onclick="comprobar()">Ver</button> -->
         <button onclick="limpiar()">Limpia</button>
-        <button onclick="Formulario(0)">Form</button>
-        <button onclick="Formulario(2)">Form2</button>
+        <!-- <button onclick="Formulario(0)">Form</button>
+        <button onclick="Formulario(2)">Form2</button> -->
     </div>
 
 
@@ -27,7 +26,7 @@
         <!-- <button onclick="CrearCarta()">Crea una carta</button> -->
         <div>
             <button onclick="ModoEditar(this)" id="btnEditar">Empieza a editar</button>
-
+            <button id="btnPelea" onclick="Pelea()">Pelea</button>
         </div>
 
         <div class="container d-flex flex-wrap" id="ContenedorCartas">
