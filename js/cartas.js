@@ -23,6 +23,7 @@ function carga() {
         let attack = getObject.Personajes[i].ataque;
         CrearCarta(name, surname, life, attack);
     }
+    debugger;
     if (getObject.Personajes.length < 1) {
         btnPelea.disabled = true;
     }
@@ -92,13 +93,11 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     contCarta.className = "card-body";
 
     var Nombre = document.createElement("h5");
-
     var inputNombre = document.createElement("input");
     inputNombre.setAttribute("onkeydown", "return limitarLetras(event)")
     inputNombre.setAttribute("type", "text");
     inputNombre.style = "border: none; margin-bottom: 5px;";
     inputNombre.disabled = true;
-
     Nombre.appendChild(inputNombre);
 
     var inputApellidos = document.createElement("input");
@@ -272,8 +271,9 @@ function ComprobarCampos() {
     let si = true;
     let TodosInputs = document.getElementsByTagName("input");
     for (i = 0; i < TodosInputs.length; i++) {
+        TodosInputs[i].style = "border: none";
         if (TodosInputs[i].value == "") {
-            TodosInputs[i].placeholder = "QUE INTRODUZCAS ALGO";
+            TodosInputs[i].style = "border: 1px solid red";
             si = false;
         }
     }
