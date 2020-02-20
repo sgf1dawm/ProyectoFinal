@@ -5,20 +5,20 @@
 }
 @keyframes colorchange
     {
-      0%   {background: rgba(255, 0, 0, 0.10);}
-      25%  {background: rgba(255, 255, 0, 0.10); }
-      50%  {background: rgba(0, 0, 255, 0.10); }
-      75%  {background: rgba(0, 128, 0, 0.10); }
-      100% {background: rgba(255, 0, 0, 0.10); ;}
+      0%   {background: rgba(255, 0, 0, 0.25);}
+      25%  {background: rgba(255, 255, 0, 0.25); }
+      50%  {background: rgba(0, 0, 255, 0.25); }
+      75%  {background: rgba(0, 128, 0, 0.25); }
+      100% {background: rgba(255, 0, 0, 0.25); ;}
     }
 
     @-webkit-keyframes colorchange
     {
-    0%   {background: rgba(255, 0, 0, 0.10);}
-      25%  {background: rgba(255, 255, 0, 0.10); }
-      50%  {background: rgba(0, 0, 255, 0.10); }
-      75%  {background: rgba(0, 128, 0, 0.10); }
-      100% {background: rgba(255, 0, 0, 0.10); }
+    0%   {background: rgba(255, 0, 0, 0.25);}
+      25%  {background: rgba(255, 255, 0, 0.25); }
+      50%  {background: rgba(0, 0, 255, 0.25); }
+      75%  {background: rgba(0, 128, 0, 0.25); }
+      100% {background: rgba(255, 0, 0, 0.25); }
     }
     #ContenedorCartas{
       display: flex;

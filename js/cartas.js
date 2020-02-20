@@ -57,6 +57,9 @@ function modificarCartas(Nombre, Apellido, Vida, Ataque, Tipo) {
 
     //Vuelvo a subir el JSON modificado
     localStorage.setItem("Personajes", JSON.stringify(getObject));
+    if (getObject.Personajes.length < 1) {
+        btnPelea.disabled = true;
+    }
 
 }
 
@@ -94,8 +97,9 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     var Nombre = document.createElement("h5");
 
     var inputNombre = document.createElement("input");
-    inputNombre.setAttribute("onkeydown", "return limitarLetras(event)")
+    inputNombre.setAttribute("onkeydown", "return limitarLetras(event)");
     inputNombre.setAttribute("type", "text");
+    inputNombre.className = "letras";
     inputNombre.style = "border: none; margin-bottom: 5px;";
     inputNombre.disabled = true;
 
@@ -104,18 +108,21 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     var inputApellidos = document.createElement("input");
     inputApellidos.setAttribute("onkeydown", "return limitarLetras(event)")
     inputApellidos.setAttribute("type", "text");
+    inputApellidos.className = "letras";
     inputApellidos.style = "border: none; margin-bottom: 5px;";
     inputApellidos.disabled = true;
 
     var inputVida = document.createElement("input");
     inputVida.setAttribute("onkeydown", "return limitarNumeros(event)")
     inputVida.setAttribute("type", "text");
+    inputVida.className = "numeros";
     inputVida.style = "border: none; margin-bottom: 5px;";
     inputVida.disabled = true;
 
     var inputAtaque = document.createElement("input");
     inputAtaque.setAttribute("onkeydown", "return limitarNumeros(event)")
     inputAtaque.setAttribute("type", "text");
+    inputAtaque.className = "numeros";
     inputAtaque.style = "border: none; margin-bottom: 5px;";
     inputAtaque.disabled = true;
 
@@ -203,7 +210,7 @@ function ImagenSiguiente() {
 function ModoEditar(boton) {
 
     if (Editar == false) {
-        btnPelea
+        // btnPelea
         let crear = document.createElement("button");
         crear.innerText = "Crear un carta";
         crear.setAttribute("onclick", "CrearCarta()");
@@ -239,7 +246,7 @@ function ModoEditar(boton) {
 
     }
 
-    document.getElementById("ContenedorCartas").childNodes < 2 ? btnPelea.disabled = true : btnPelea.disabled = false;
+    // document.getElementById("ContenedorCartas").childNodes < 2 ? btnPelea.disabled = true : btnPelea.disabled = false;
 }
 
 
@@ -269,13 +276,21 @@ function ModoEditar(boton) {
 // }
 
 function ComprobarCampos() {
+    debugger;
     let si = true;
     let TodosInputs = document.getElementsByTagName("input");
+    var regexpN = /\d\S{ 1, 3}/g;
     for (i = 0; i < TodosInputs.length; i++) {
+        TodosInputs[i].style = "border: none";
         if (TodosInputs[i].value == "") {
             TodosInputs[i].placeholder = "QUE INTRODUZCAS ALGO";
             si = false;
         }
+        else if (TodosInputs[i].className == "numeros" && TodosInputs[i].value == regexpN) {
+            TodosInputs[i].style = "border: 1px solid red";
+            si = false;
+        }
+
     }
     return si;
 
@@ -434,4 +449,33 @@ function Pelea(n) {
         contendor[mayor].appendChild(volver);
     }
 
+}
+
+function Color(evento) {
+    debugger;
+
+    if (evento == null) {
+        // if (btnCustom.value == "Customizar color")
+        let vody = document.getElementsByTagName("body");
+        vody[0].setAttribute("onkeydown", "return Color(event)");
+        document.getElementById("btnCustom").innerText = "Deja de customizar";
+        let guia = document.getElementById("guiaColores");
+        guia.innerText = "W = White | Y = Yellow | R = Red | B = Blue";
+    }
+    else {
+        var teclaPulsada = evento.keyCode;
+        let jeder = document.getElementById("cabecera");
+        if (teclaPulsada == 66) {
+            jeder.style = "background-color:rgba(0, 0, 255, 0.35); border: 2px solid black;";
+        }
+        if (teclaPulsada == 89) {
+            jeder.style = "background-color:rgba(255, 255, 0, 0.35); border: 2px solid black;";
+        }
+        if (teclaPulsada == 82) {
+            jeder.style = "background-color:rgba(255, 0, 0, 0.35); border: 2px solid black;";
+        }
+        if (teclaPulsada == 87) {
+            jeder.style = "background-color:rgba(255, 255, 255, 0.35); border: 2px solid black;";
+        }
+    }
 }
