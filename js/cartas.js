@@ -16,32 +16,43 @@ function carga() {
         localStorage.setItem("Personajes", JSON.stringify(añadir));
         return;
     }
-    for (i = 0; i < getObject.Personajes.length; i++) {
-        let name = getObject.Personajes[i].nombre;
-        let surname = getObject.Personajes[i].apellido;
-        let life = getObject.Personajes[i].vida;
-        let attack = getObject.Personajes[i].ataque;
-        CrearCarta(name, surname, life, attack);
+    else {
+        // Creo las cartas
+        for (i = 0; i < getObject.Personajes.length; i++) {
+            let name = getObject.Personajes[i].nombre;
+            let surname = getObject.Personajes[i].apellido;
+            let life = getObject.Personajes[i].vida;
+            let attack = getObject.Personajes[i].ataque;
+            let image = getObject.Personajes[i].imagen;
+            CrearCarta(name, surname, life, attack, image);
+        }
     }
 
-    if (getObject.Personajes.length < 1) {
-        btnPelea.disabled = true;
-    }
+    // Compruebo si existen cookies, en caso de que existan, las cargo en el html
     if (document.cookie == "") {
         document.getElementById("antGanador").innerText = "No hay anterior gandor";
     }
     else {
-        debugger;
-
         let separar = document.cookie.split(';');
         let imagen = document.getElementById("imagenGanador");
-        imagen.src = separar[4];
-        let ganadorAnterior = "\n" + separar[0] + "\n" + separar[1] + "\n" + separar[2] + "\n" + separar[3] + "\n";
+        imagen.src = separar[0];
+        let ganadorAnterior = "\n" + separar[1] + "\n" + separar[2] + "\n" + separar[3] + "\n" + separar[4] + "\n";
         document.getElementById("antGanador").innerText += ganadorAnterior;
     }
+
+    //Si hay menos de 2 luchadores, no se permite pelear
+    if (getObject.Personajes.length < 2) {
+        btnPelea.disabled = true;
+    }
+    else {
+        btnPelea.disabled = false;
+    }
+
 }
 
-function modificarCartas(Nombre, Apellido, Vida, Ataque, Tipo) {
+
+//Modifico las cartas, ya sea para guardarlas o para borrarlas.
+function modificarCartas(Nombre, Apellido, Vida, Ataque, Imagen, pos, Tipo) {
 
     //Me descargo el string de localStorage y lo convierto a JSON
     let getObject = JSON.parse(localStorage.getItem("Personajes"));
@@ -49,17 +60,24 @@ function modificarCartas(Nombre, Apellido, Vida, Ataque, Tipo) {
     let repetido = false;
     if (Tipo == "Añadir") {
         //Creo un segundo objeto para añadir
-        nuevo = { "nombre": Nombre, "apellido": Apellido, "vida": Vida, "ataque": Ataque }
+        nuevo = { "nombre": Nombre, "apellido": Apellido, "vida": Vida, "ataque": Ataque, "imagen": Imagen }
 
-        //Añado el segundo objeto al array del JSON
-        for (i = 0; i < getObject.Personajes.length; i++) {
-            if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida && lista[i].ataque == Ataque) {
-                repetido = true;
-                return;
-            }
+        // En caso de haberse modificado los datos de algun personaje, cambio los datos de los mismos 
+        if (pos < getObject.Personajes.length) {
+            pj = getObject.Personajes[pos];
+            pj.nombre = Nombre;
+            pj.apellido = Apellido;
+            pj.vida = Vida;
+            pj.ataque = Ataque;
+            pj.imagen = Imagen;
         }
-        if (repetido == false) { getObject.Personajes.push(nuevo) }
+        else {
+            // Si se ha añadido alguno nuevo, entonces lo agrego al array de personajes
+            getObject.Personajes.push(nuevo)
+            // }
+        }
     }
+    //Si no estoy añadiendo, procedo a borrar dicho personaje del array
     else {
         for (i = 0; i < lista.length; i++) {
             if (lista[i].nombre == Nombre && lista[i].apellido == Apellido && lista[i].vida == Vida && lista[i].ataque == Ataque) {
@@ -70,25 +88,25 @@ function modificarCartas(Nombre, Apellido, Vida, Ataque, Tipo) {
 
     //Vuelvo a subir el JSON modificado
     localStorage.setItem("Personajes", JSON.stringify(getObject));
-    if (getObject.Personajes.length < 1) {
+
+    //No se puede pelear si hay menos de  2 personajes
+    if (getObject.Personajes.length < 2) {
         btnPelea.disabled = true;
     }
+    else {
+        btnPelea.disabled = false;
+    }
 
-}
-
-function comprobar() {
-
-    // localStorage.removeItem("Personajes");
-    getObject = JSON.parse(localStorage.getItem("Personajes"));
-
-    console.log(getObject);
 }
 
 function limpiar() {
     localStorage.removeItem("Personajes");
 }
 
-function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
+
+//////////CREACIÓN DE ELEMENTOS DEL DOM Y ASIGNACION DE EVENTOS DE TECLADO/////////////////////
+
+function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito, Imagencita) {
 
     var contMain = document.getElementById("ContenedorCartas");
 
@@ -100,12 +118,12 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
 
     var imagen = document.createElement("img");
     imagen.className = "card-img-top";
-    imagen.setAttribute("src", ImagenSiguiente());
     imagen.setAttribute("width", "70");
     imagen.setAttribute("height", "300");
 
     var contCarta = document.createElement("div");
     contCarta.className = "card-body";
+
 
     var Nombre = document.createElement("h5");
     var inputNombre = document.createElement("input");
@@ -126,14 +144,14 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     var inputVida = document.createElement("input");
     inputVida.setAttribute("onkeypress", "return limitarNumeros(event)")
     inputVida.setAttribute("type", "text");
-    inputVida.className = "numeros";
+    inputVida.className = "vida";
     inputVida.style = "border: none; margin-bottom: 5px;";
     inputVida.disabled = true;
 
     var inputAtaque = document.createElement("input");
     inputAtaque.setAttribute("onkeypress", "return limitarNumeros(event)")
     inputAtaque.setAttribute("type", "text");
-    inputAtaque.className = "numeros";
+    inputAtaque.className = "ataque";
     inputAtaque.style = "border: none; margin-bottom: 5px;";
     inputAtaque.disabled = true;
 
@@ -142,8 +160,9 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     borrar.setAttribute("onclick", "BorrarCarta(this)");
     borrar.setAttribute("class", "btnBorrar");
 
+    //Si detecta que le estan pasando valores (en el caso de la carga de la página) crea el objeto con dichos valores
     if (Vidita != null) {
-
+        imagen.setAttribute("src", Imagencita);
         inputAtaque.setAttribute("value", Ataquecito);
         inputVida.setAttribute("value", Vidita);
         inputApellidos.setAttribute("value", Apelliditos);
@@ -154,6 +173,7 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
         contCarta.appendChild(inputAtaque);
     }
     else {
+        imagen.setAttribute("src", ImagenSiguiente());
         contCartaMain.className += "border border-danger";
         inputAtaque.setAttribute("placeholder", "Introduce Ataque");
         inputVida.setAttribute("placeholder", "Introduzca Vida");
@@ -171,8 +191,13 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     contMain.appendChild(contCartaMain);
 }
 
+
+//////////FIN CREACIÓN DE ELEMENTOS DEL DOM Y ASIGNACIÓN DE EVENTOS DE TECLADO/////////////////////
+
+
 var Editar = false;
 
+//Asignación automática de imagenes
 var nImg = -1;
 function ImagenSiguiente() {
 
@@ -221,21 +246,29 @@ function ImagenSiguiente() {
 function ModoEditar(boton) {
 
     if (Editar == false) {
-        // btnPelea
+        Editar = true;
+        Resaltar("si");
         let crear = document.createElement("button");
-        crear.innerText = "Crear un carta";
+        let cartitas = document.getElementsByClassName("card-body");
+        let instrucciones = document.createElement("p");
+        let borrar = document.createElement("button");
+        btnPelea.disabled = true;
+
+        boton.innerText = "Terminar de editar";
+
+        crear.innerText = "Crear una carta";
         crear.setAttribute("onclick", "CrearCarta()");
         crear.setAttribute("id", "btncrear");
         boton.parentNode.appendChild(crear);
-        Resaltar("si");
-        Editar = true;
-        boton.innerText = "Terminar de editar";
-        var borrar = document.createElement("button");
-        let cartitas = document.getElementsByClassName("card-body");
+
         borrar.innerText = "Borrar";
         borrar.setAttribute("onclick", "BorrarCarta(this)");
         borrar.setAttribute("class", "btnBorrar");
 
+        instrucciones.setAttribute("id", "btnInstr");
+        boton.parentNode.appendChild(instrucciones);
+
+        //Creo el boton borrar en todas las cartas
         for (i = 0; i < cartitas.length; i++) {
             cartitas[i].appendChild(borrar.cloneNode(true));
         }
@@ -243,13 +276,18 @@ function ModoEditar(boton) {
     else {
 
         if (ComprobarCampos()) {
+            Editar = false;
             GuardarCartas("Guardar");
             Resaltar("no");
-            Editar = false
             let botonCrear = document.getElementById("btncrear");
-            botonCrear.parentNode.removeChild(botonCrear);
-            boton.innerText = "Empieza a editar";
+            let botonInstrucciones = document.getElementById("btnInstr");
             let botoncitos = document.getElementsByClassName("btnBorrar");
+
+            boton.innerText = "Empieza a editar";
+
+            botonCrear.parentNode.removeChild(botonCrear);
+            botonInstrucciones.parentNode.removeChild(botonInstrucciones);
+
             for (i = botoncitos.length - 1; i >= 0; i--) {
                 botoncitos[i].parentNode.removeChild(botoncitos[i]);
             }
@@ -257,40 +295,13 @@ function ModoEditar(boton) {
 
     }
 
-    // document.getElementById("ContenedorCartas").childNodes < 2 ? btnPelea.disabled = true : btnPelea.disabled = false;
 }
 
-
-// function Formulario(n) {
-//     if (n == 1) {
-//         
-//         var contenedor = document.getElementById("ContenedorCartas").childNodes;
-//         for (i = contenedor.length - 1; i >= 0; i--) {
-//             let prueba = contenedor[i];
-//             prueba.parentNode.removeChild(prueba);
-//         }
-//         return;
-//     }
-//     if (n == 0) {
-//         Formulario(1);
-//         form = document.createElement("form");
-//         form.appendChild(inputNombre);
-//         form.appendChild(inputApellidos);
-//         form.appendChild(inputVida);
-//         form.appendChild(inputAtaque);
-//         document.getElementById("ContenedorCartas").appendChild(form);
-
-//     }
-//     else {
-//         carga();
-//     }
-// }
-
+//Valido los campos
 function ComprobarCampos() {
 
     let si = true;
     let TodosInputs = document.getElementsByTagName("input");
-    var regexpN = /\d{1,4}/g;
     for (i = 0; i < TodosInputs.length; i++) {
         TodosInputs[i].style = "border: none";
         let valor = TodosInputs[i].value;
@@ -298,33 +309,64 @@ function ComprobarCampos() {
             TodosInputs[i].style = "border: 1px solid red";
             si = false;
         }
-        // TodosInputs[i].className == "numeros" && 
-        // else if (!regexpN.test(valor)) {
-        //     TodosInputs[i].style = "border: 1px solid red";
-        //     si = false;
-        // }
+        // TodosInputs[i].className == "numeros"
+        else {
+            switch (TodosInputs[i].className) {
+                case "letras":
+                    if (valor.length < 2 || valor.length > 30) {
+                        TodosInputs[i].style = "border: 1px solid red";
+                        si = false;
+                    }
+                    break;
+                case "vida":
+                    if (valor.length > 5 || valor.length < 4) {
+                        TodosInputs[i].style = "border: 1px solid red";
+                        si = false;
+                    }
+                    break;
+                case "ataque":
+
+                    if (valor.length > 3 || valor.length < 2) {
+                        TodosInputs[i].style = "border: 1px solid red";
+                        si = false;
+                    }
+                    break;
+            }
+
+
+        }
 
     }
+    //Añado unas instrucciones
+    if (si == false) {
+        btnInstr.innerText = "El nombre y los apellidos deben tener entre 3 y 30 letras. \n La vida entre 4 y 5 dígitos. \n El ataque entre 2 y 3 dígitos.";
+        btnInstr.style = "color: red";
+    }
+
     return si;
 
 }
 
+//Función intermedia para el añadido o borrado de cartas, pasando carta a carta para dicha función
 function GuardarCartas(Tipo) {
-
     let cartas = document.getElementsByClassName("card-body");
     var nom;
     var ape;
     var vida;
     var ataque;
+    var img;
     if (Tipo == "Guardar") {
+
         for (i = 0; i < cartas.length; i++) {
+            let Cont = cartas[i].parentNode.childNodes;
+            img = Cont[0].src;
             inputs = cartas[i].childNodes;
             test = inputs[0].childNodes;
             nom = test[0].value;
             ape = inputs[1].value;
             vida = inputs[2].value;
             ataque = inputs[3].value;
-            modificarCartas(nom, ape, vida, ataque, "Añadir");
+            modificarCartas(nom, ape, vida, ataque, img, i, "Añadir");
         }
     }
     else {
@@ -334,10 +376,11 @@ function GuardarCartas(Tipo) {
         ape = inputs[1].value;
         vida = inputs[2].value;
         ataque = inputs[3].value;
-        modificarCartas(nom, ape, vida, ataque, "Borrar");
+        modificarCartas(nom, ape, vida, ataque, img, "Borrar");
     }
 }
 
+//Borde rojo para el editado
 function Resaltar(SioNo) {
 
     let cartitas = document.getElementsByClassName("card-body");
@@ -360,7 +403,7 @@ function Resaltar(SioNo) {
     }
 }
 
-
+//////////////////  EVENTOS DE RATON  //////////////////
 function Desbloquear(carta) {
     if (Editar == true) {
         var inputs = carta.getElementsByTagName("input");
@@ -373,11 +416,8 @@ function Desbloquear(carta) {
 
 
 function Bloquear(carta) {
-
-
-
+    debugger;
     if (Editar == true) {
-
         var inputs = carta.getElementsByTagName("input");
 
         for (var i = 0; i < inputs.length; i++) {
@@ -385,17 +425,13 @@ function Bloquear(carta) {
         }
         return;
     }
-    if (carta == "body") {
-        var inputs = ContenedorCartas.getElementsByTagName("input");
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    }
-
-
 
 }
 
+//////////////////  FIN EVENTOS DE RATON  //////////////////
+
+
+//Borro la carta en el DOM, pero no en la lista guardada
 function BorrarCarta(boton) {
 
     var padre = boton.parentNode;
@@ -406,6 +442,8 @@ function BorrarCarta(boton) {
 
 }
 
+
+//Limitación de letras y numeros
 function limitarLetras() {
     let e = window.event || evento;
     let tecla = e.keyCode;
@@ -428,12 +466,14 @@ function limitarNumeros() {
     }
 }
 
+/////////////////////  USO DE COOKIES  ////////////////////////////
 function Pelea(n) {
     if (n != 0) {
 
         getObject = JSON.parse(localStorage.getItem("Personajes"));
         var listaIndices = new Array();
         var mayor = 0;
+        let contendor = document.getElementById("ContenedorCartas").childNodes;
 
         for (i = 0; i < getObject.Personajes.length; i++) {
             let life = getObject.Personajes[i].vida;
@@ -443,7 +483,6 @@ function Pelea(n) {
             mayor = indice > mayor ? indice : mayor;
         }
         mayor = listaIndices.indexOf(mayor) + 1;
-        contendor = document.getElementById("ContenedorCartas").childNodes;
         for (y = 1; y < contendor.length; y++) {
             if (y != mayor)
                 contendor[y].className = "ocultar";
@@ -455,6 +494,7 @@ function Pelea(n) {
         contendor[mayor].className = "ganador";
         btnEditar.className = "ocultar";
         btnPelea.className = "ocultar";
+
         let volver = document.createElement("button");
         volver.innerText = "Volver a la lista";
         volver.setAttribute("onclick", "location.reload()");
@@ -467,11 +507,16 @@ function Pelea(n) {
         document.cookie = "Vida" + "=" + DatosGanador[2].value + ";";
         document.cookie = "Ataque" + "=" + DatosGanador[3].value + ";";
         document.cookie = cartaGanadora[0].src;
-        console.log(document.cookie);
+
     }
 
 }
 
+
+///////////////////  FIN DE USO DE COOKIES  //////////////////
+
+
+//Función añadida para el personalizado del header
 function Color(evento) {
 
 

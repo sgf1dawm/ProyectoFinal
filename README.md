@@ -6,7 +6,7 @@ Deberá incluir: (4 puntos)
 
 3. Expresiones regulares (3 como mínimo).
 
-4. Empleo de cookies.
+<!-- 4. Empleo de cookies. -->
 
 <!-- 5. DOM: creación de varios elementos de forma dinámica en el documento
 utilizando las propiedades y métodos necesarios para ello. -->

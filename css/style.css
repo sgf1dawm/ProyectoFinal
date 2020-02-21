@@ -3,8 +3,8 @@
 }
 .circulo{
     
-      animation: colorchange 60s;
-      -webkit-animation: colorchange 60s;
+      animation: colorchange 150s;
+      -webkit-animation: colorchange 150s;
 }
 @keyframes colorchange
     {
@@ -70,9 +70,10 @@ div input:first-child{
 }
 
 #antGanador{
-  margin-left: 15%;
+  overflow: auto;
+  margin-left: 5%;
   line-height: 2em;
-  font-size: 1.2em;
+  font-size: 1em;
   margin-top: -40px;
 }
 
