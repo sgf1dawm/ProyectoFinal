@@ -1,3 +1,6 @@
+*{
+  font-family: 'Roboto';
+}
 .circulo{
     
       animation: colorchange 60s;
@@ -53,6 +56,27 @@ div input:first-child{
 }
 
 .d-block{
-  width: 100%;
+  margin: 0 auto;
+  width: 50%;
   height: 400px;
+}
+
+.dropdown { 
+  list-style:none;
+}
+
+.dropdown a{
+  color: black;
+}
+
+#antGanador{
+  margin-left: 15%;
+  line-height: 2em;
+  font-size: 1.2em;
+  margin-top: -40px;
+}
+
+#imagenGanador{
+  width: 120px;
+  margin: 20px;
 }

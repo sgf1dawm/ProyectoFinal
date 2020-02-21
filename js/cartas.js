@@ -1,7 +1,7 @@
 //Creacion de cartas automaticas
 
 function carga() {
-    debugger;
+
     var getObject = JSON.parse(localStorage.getItem("Personajes"));
 
     if (getObject == null) {
@@ -23,9 +23,21 @@ function carga() {
         let attack = getObject.Personajes[i].ataque;
         CrearCarta(name, surname, life, attack);
     }
-    debugger;
+
     if (getObject.Personajes.length < 1) {
         btnPelea.disabled = true;
+    }
+    if (document.cookie == "") {
+        document.getElementById("antGanador").innerText = "No hay anterior gandor";
+    }
+    else {
+        debugger;
+
+        let separar = document.cookie.split(';');
+        let imagen = document.getElementById("imagenGanador");
+        imagen.src = separar[4];
+        let ganadorAnterior = "\n" + separar[0] + "\n" + separar[1] + "\n" + separar[2] + "\n" + separar[3] + "\n";
+        document.getElementById("antGanador").innerText += ganadorAnterior;
     }
 }
 
@@ -77,7 +89,7 @@ function limpiar() {
 }
 
 function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
-    debugger;
+
     var contMain = document.getElementById("ContenedorCartas");
 
     var contCartaMain = document.createElement("div");
@@ -112,14 +124,14 @@ function CrearCarta(Nombrecito, Apelliditos, Vidita, Ataquecito) {
     inputApellidos.disabled = true;
 
     var inputVida = document.createElement("input");
-    inputVida.setAttribute("onkeydown", "return limitarNumeros(event)")
+    inputVida.setAttribute("onkeypress", "return limitarNumeros(event)")
     inputVida.setAttribute("type", "text");
     inputVida.className = "numeros";
     inputVida.style = "border: none; margin-bottom: 5px;";
     inputVida.disabled = true;
 
     var inputAtaque = document.createElement("input");
-    inputAtaque.setAttribute("onkeydown", "return limitarNumeros(event)")
+    inputAtaque.setAttribute("onkeypress", "return limitarNumeros(event)")
     inputAtaque.setAttribute("type", "text");
     inputAtaque.className = "numeros";
     inputAtaque.style = "border: none; margin-bottom: 5px;";
@@ -229,7 +241,7 @@ function ModoEditar(boton) {
         }
     }
     else {
-        debugger;
+
         if (ComprobarCampos()) {
             GuardarCartas("Guardar");
             Resaltar("no");
@@ -251,7 +263,7 @@ function ModoEditar(boton) {
 
 // function Formulario(n) {
 //     if (n == 1) {
-//         debugger;
+//         
 //         var contenedor = document.getElementById("ContenedorCartas").childNodes;
 //         for (i = contenedor.length - 1; i >= 0; i--) {
 //             let prueba = contenedor[i];
@@ -275,20 +287,22 @@ function ModoEditar(boton) {
 // }
 
 function ComprobarCampos() {
-    debugger;
+
     let si = true;
     let TodosInputs = document.getElementsByTagName("input");
-    var regexpN = /\d\S{ 1, 3}/g;
+    var regexpN = /\d{1,4}/g;
     for (i = 0; i < TodosInputs.length; i++) {
         TodosInputs[i].style = "border: none";
-        if (TodosInputs[i].value == "") {
+        let valor = TodosInputs[i].value;
+        if (valor == "") {
             TodosInputs[i].style = "border: 1px solid red";
             si = false;
         }
-        else if (TodosInputs[i].className == "numeros" && TodosInputs[i].value == regexpN) {
-            TodosInputs[i].style = "border: 1px solid red";
-            si = false;
-        }
+        // TodosInputs[i].className == "numeros" && 
+        // else if (!regexpN.test(valor)) {
+        //     TodosInputs[i].style = "border: 1px solid red";
+        //     si = false;
+        // }
 
     }
     return si;
@@ -296,7 +310,7 @@ function ComprobarCampos() {
 }
 
 function GuardarCartas(Tipo) {
-    debugger;
+
     let cartas = document.getElementsByClassName("card-body");
     var nom;
     var ape;
@@ -325,7 +339,7 @@ function GuardarCartas(Tipo) {
 }
 
 function Resaltar(SioNo) {
-    debugger;
+
     let cartitas = document.getElementsByClassName("card-body");
     for (i = 0; i < cartitas.length; i++) {
         carta = cartitas[i].parentNode;
@@ -383,7 +397,7 @@ function Bloquear(carta) {
 }
 
 function BorrarCarta(boton) {
-    debugger;
+
     var padre = boton.parentNode;
     let carta = padre.parentNode;
     let contendor = carta.parentNode;
@@ -416,7 +430,7 @@ function limitarNumeros() {
 
 function Pelea(n) {
     if (n != 0) {
-        debugger;
+
         getObject = JSON.parse(localStorage.getItem("Personajes"));
         var listaIndices = new Array();
         var mayor = 0;
@@ -446,20 +460,34 @@ function Pelea(n) {
         volver.setAttribute("onclick", "location.reload()");
         volver.style = "float: right; border: 1px solid black";
         contendor[mayor].appendChild(volver);
+        cartaGanadora = contendor[mayor].childNodes;
+        DatosGanador = cartaGanadora[1].childNodes;
+        document.cookie = "Nombre" + "=" + DatosGanador[0].childNodes[0].value + ";";
+        document.cookie = "Apellido" + "=" + DatosGanador[1].value + ";";
+        document.cookie = "Vida" + "=" + DatosGanador[2].value + ";";
+        document.cookie = "Ataque" + "=" + DatosGanador[3].value + ";";
+        document.cookie = cartaGanadora[0].src;
+        console.log(document.cookie);
     }
 
 }
 
 function Color(evento) {
-    debugger;
+
 
     if (evento == null) {
-        // if (btnCustom.value == "Customizar color")
         let vody = document.getElementsByTagName("body");
-        vody[0].setAttribute("onkeydown", "return Color(event)");
-        document.getElementById("btnCustom").innerText = "Deja de customizar";
         let guia = document.getElementById("guiaColores");
-        guia.innerText = "W = White | Y = Yellow | R = Red | B = Blue";
+        if (btnCustom.innerText == "Customizar color") {
+            vody[0].setAttribute("onkeydown", "return Color(event)");
+            document.getElementById("btnCustom").innerText = "Deja de customizar";
+            guia.innerText = "W = White | Y = Yellow | R = Red | B = Blue";
+        }
+        else {
+            vody[0].removeAttribute("onkeydown");
+            guia.innerText = "";
+            document.getElementById("btnCustom").innerText = "Customizar color";
+        }
     }
     else {
         var teclaPulsada = evento.keyCode;
@@ -478,3 +506,4 @@ function Color(evento) {
         }
     }
 }
+
